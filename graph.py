@@ -1,63 +1,79 @@
-#Use no overloading...More effective, More pythonic, but a little inconvienient...
-from typing import overload
+from numpy.lib import financial
+from adj import Adjlist
 import numpy as np
-class Adjlist:
+"""
+class adj is not the parent if class Graph!!
+"""
 
-	def __init__(self, initlist:list):
-		self.adj = self.mkdiff(initlist)
-		self.edges = sum([len(x) for x in initlist])
+class Graph:
+	#TODO: initialize an adj and apply more 
+	pass
 
+	def __init__(self):
+		self.adj = Adjlist([])
+		#self.vertex_matrix = Matrix([])
+		pass
+
+	def __iter__(self):
+		return iter(self.adj)
+
+	def __len__(self):
+		return len(self.adj)
 	"""
-Inut [[2, 3], [3, 5]]=> 
+	To ensure the security, 
+	I sep the add function into addEdge and addVertex
 	"""
-	def __getitem__(self, idx):
-		return self.adj[idx]
-	@overload
-	def add(self, vs:list, ws:list)->None:
-		tmpmax = np.max([col for col in ws])
-		if tmpmax >= len(self.adj):
-			print(tmpmax)
-			self.autogen(self, tmpmax)
-		
-		for v, w in zip(vs, ws):
-			self.adj[v].extend(w)
-			for i in w:
-				self.adj[i].extend([v])
-		self.adj = self.mkdiff(self.adj)
-		self.edges = sum([len(x) for x in self.adj])
-	@overload
-	def add(self, v:int, w:int)->None:
-		"""Recommand Way To Add New Nodes And Edge"""
 
-		self.adj[v].append(w)
-		self.adj[w].append(v)
-		self.edges += 1
-	
-	def autogen(self, maxlen:int):
-		"""
-		Extend the array
-		"""
-		tmp = [[] for i in range(maxlen - len(self.adj) + 1)]
-		self.adj.extend(tmp)
+	def addEdge(self, v:int, w:int):
+		if v > len(self.adj) - 1 or w > len(self.adj) - 1:
+			raise IndexError("You should call Graph.addVertex to add new vertex ")
+		if v is not w:
+			self.adj.add(v, w)
 
-	def mkdiff(self, adj:list):
-		"""Return an Interable(2D-deep), with every elements different"""
-		return [list(set(tmp)) for tmp in adj]
+	def addVertex(self, v:int, w=None):
+		if w is None:
+			self.adj.autogen(v)
+		else:
+			self.adj.add(v, w)
 
-	def shownode(self, idx):
-		print("*")
-		tmp = self.adj
-		for i in tmp[idx]:
-			print(f"|---{i}")
-		print('\n')
+	def shownode(self, idx:int, showzero=True):
+		self.adj.shownode(idx, showzero=showzero)
 
+
+
+
+
+def search(Graph, s:int):
+	"""
+	Show all vertex linked to the vertex s 
+	"""
+	try:
+		result = Graph.adj[s]
+		return result
+	except IndexError as ie:
+		print("The vertex doesn't exsit.", ie.value)
+		return None
+	finally:
+		print("Done.")
 
 
 
 
 if __name__ == '__main__':
+	demo = Graph()
+	demo.addVertex(5)
+	length = len(demo)
+	for i in range(length):
+		demo.shownode(i)
 
-	demo = Adjlist([[2, 4, 5],  [2, 4, 5, 6], [1, 2,4]])
-	demo.shownode(1)
-	demo.add([0, 1], [[1,2], [2,3,4]])
-	demo.shownode(1)
+	for i in range(length):
+		demo.addEdge(i, np.random.randint(i+1))
+	print('='*20)
+
+	for i in range(length):
+		demo.shownode(i)
+
+	for i in iter(demo):
+		print(i)
+	#demo.shownode(5, showzero=True)
+	
