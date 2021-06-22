@@ -1,6 +1,14 @@
 from Graphy import GraphByVertex, Vertex, choice
+from algorithm.Travel import *
 from numpy import random as rand
 import numpy as np
+
+"""
+现在已经有了一个随机生成连接情况的图
+下一步是上色。
+最后可视化就再说了吧。
+
+"""
 
 
 colors = ['red', 'yellow', 'blue', 'green']#Enumeration...
@@ -23,6 +31,8 @@ def RandGenAdj(max_v, max_deg=3):
 			tmp.add(w)
 			G.addEdge(idx, w)
 	print(G)
+
+
 
 
 if __name__ == '__main__':
