@@ -1,0 +1,119 @@
+#-*-coding=utf-8-*-
+#Graph Class
+
+from numpy import random as rand
+
+
+
+class Graph:
+	# A simpler Graph, which can be inerited by many kinds of Graph.
+	_colors = ["red", "yello", "blue", "green"]
+
+
+	def __init__(self):
+		self.index_tree = [[]] #A tree which stores indeces.
+
+	def __getitem__(self, index:int):
+		return self.index_tree[index]
+
+	def _diffidx(self, vidx, widx)->bool:
+		return True if vidx is not widx else False
+
+	def _out_range(self, idx:int):
+		return True if len(self.index_tree) < idx + 1 else False
+
+	def _self_loop(self, start_index)->bool:
+		"""
+		check whether a vertex is in an vertex circle
+		No needed
+		"""
+		pass
+
+	def addVertex(self, idx:int)->bool:
+		"""
+		If success, return True
+		Else, return False
+		"""
+		if self._out_range(idx):
+			self.index_tree.append([])
+			return True
+		else:
+			return False
+
+	def addEdge(self, vidx:int, widx:int, checkhard=False)->bool:
+		"""
+		index of vertex V(vidx) cannot equal to index of vertex W(widx)
+		if success return True
+		if fail return False
+
+		Don't use autogen method, which makes loops unsafe
+		"""
+		if self._out_range(vidx) or self._out_range(widx):
+			if not checkhard:
+				return False
+			else:
+				raise IndexError("Out of the range!")
+		elif vidx is not widx:
+			self.index_tree[vidx].append(widx)
+		elif checkhard:
+			raise IndexError("You cannot ")
+
+
+class Vertex(list):
+
+	__slots__ = ['idx', 'value', 'linked_inedx']
+	"""
+	In this simple class, decorator-property is not needed, which makes the prog clearer but slower...
+	"""
+
+	def __init__(self, index, value, linked=None):
+		
+		self.idx = index#idx'th vertex -> color
+		self.value = value#Value can be a symbol, a number or anything
+		self.linked_index = linked
+
+	def __repr__(self):
+		length = len(self.linked_index)
+		string = f"*Node {self.idx}*\n"
+		if self.linked_index is not None:
+			for node in self.linked_index:
+				string += f"   |--->{node}\n"
+		string += f"   :{length}edge(s)"
+		return string 
+
+	def addVertex(self, idx:int)->bool:
+		if idx is not in self.linked_index:
+			self.linked_index.append(idx)
+
+	@property
+	def get_idx(self):
+		return self.idx 
+	
+	
+
+	
+class Graph_Nodes:
+
+	def __init__(self):
+		self.tree = []
+
+	def addNode(self, node:Vertex)->bool:
+		if self.out_range(idx):
+			self.tree.append(Vertex(idx, value))
+			return True
+		else:
+			return False
+
+	def addEdge(self, )
+
+
+# Nothing....
+class Iterable:
+	def __init__(self, vars):
+		self.vars = vars
+
+	def __get__(self, instance, cls):
+		if instance is None:
+			return self
+		else:
+			return instance.__dict__[self.vars]
