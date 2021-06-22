@@ -7,6 +7,7 @@ from numpy import random as rand
 import numpy as np
 import random as rd
 
+
 class AdjMatrix:
 	"""
 	使用矩阵来存储
@@ -15,10 +16,11 @@ class AdjMatrix:
 		self.M = np.array([])# M 是对称方阵
 		self.color_store = {}# Mapping...Index to color
 	def _out_range(self, idx:int)->bool:
-			
+		pass
 
 	def expand(self, to_max:int):
 		#TODO expand the matrix.
+		pass
 
 
 
@@ -36,11 +38,11 @@ Demo.ismarked
 其中addLinked内包含一个异常类型VertexIndexError,不允许异常Index和自身相连
 （多点自环在Graph中来检测）
 """
-class Vertex(list):
+class Vertex:
 
 	__slots__ = ['_idx', '_color', '_linked_index', '_marked']#Save memory
 
-	def __init__(self, index, value, linked:list, marked=False):
+	def __init__(self, index, value=0, linked=[], marked=False):
 		
 		self._idx = index#idx'th vertex -> color
 		self._color = value#Value can be a symbol, a number or anything
@@ -50,7 +52,7 @@ class Vertex(list):
 	def __repr__(self):
 
 		length = len(self._linked_index)
-		string = f"*V{self._idx}:\n"
+		string = f"\n*V{self._idx}:    colorcode={self._color}\n"
 		if self._linked_index is not None:
 			for node in self._linked_index:
 				string += f"   |--->{node}\n"
@@ -59,7 +61,7 @@ class Vertex(list):
 
 	def addLinked(self, idx:int)->bool:
 		#将Index错误的检测传到Graph里，这里只需要负责添加就行
-		if idx > 0:
+		if idx >= 0:
 			self._linked_index.append(idx)
 			return True
 		else:
@@ -87,6 +89,7 @@ class Vertex(list):
 	@property
 	def ismarked(self):
 		return self._marked
+
 
 #APIs of GraphList:
 
@@ -133,7 +136,7 @@ class GraphByVertex:
 			print(node)
 		return ""
 	def __getitem__(self, index):
-		return np.array(self.G[index])
+		return self.G[index]
 
 	def __len__(self):
 		"""Number of vertexes"""
@@ -141,7 +144,7 @@ class GraphByVertex:
 
 
 	def _auto_gen(self, idx):
-		self.G.append([[] for i in range(2 * (idx - len(self.G) + 1))])
+		self.G.append([[] for i in range(2 * idx)])
 
 	def _out_range(self, idx):
 		return True if len(self.G)-1 < idx else False
@@ -163,13 +166,14 @@ class GraphByVertex:
 
 	def addEdge(self, v, w):
 		if v is w or v * w < 0:
-			raise GE.VertexIndexError("Wrong Index!")
-		else:
-			if self._out_range(v) or self._out_range(w):
-				self._auto_gen(max(v, w))
+			return None
+		elif v not in self.G[w].get_linked and w not in self.G[v].get_linked:
 			self.G[v].addLinked(w)
 			self.G[w].addLinked(v)
-
+		else:
+			return None
+	'''elif self._out_range(v) or self._out_range(w):
+				self._auto_gen(max(v, w))#在先初始化的情况下这个判定可以丢掉了。'''
 	def close_colors(self, index):
 		return np.array((self.G[v_idx].get_color for v_idx in self.G[index].get_linked))
 
@@ -184,15 +188,17 @@ class GraphByVertex:
 		else:
 			raise ValueError(f"{by} is not a valid value for arg by")
 
-	def self_loop(self, start_index):#想了个比较低效的算法……
-		"""在某个顶点开始， 一直向下搜索，如果搜索到底的过程中， 
-		有跟start_index一样的index就返回True
-
-		这样算法效率难提高， 应该在图生成的时候就要确保不自环"""
-
+	def self_loop(self, start_index):#
+		"""
+		深度遍历到最底部，如果得到的index和出发点一样就返回True
+		这样算法效率难提高， 应该在图生成的时候就要确保不自环
+		"""
 		pass
+
+
 	def get_color(self, index):
 		return self.G[index].get_color
+
 	def get_linked(self, index):
 		return self.G[index].get_linked
 
@@ -200,8 +206,7 @@ class GraphByVertex:
 	def all_edges(self)->np.ndarray:
 		return [vertex.get_linked for vertex in self.G]
 
-	@property
-
+	
 
 	@property
 	def get_vertex_by_color(self, key, by='color'):
@@ -228,24 +233,13 @@ class Iterable:
 			return instance.__dict__[self.vars]
 """
 
-def choice(number, max):
-	if number >= 0:
-		tmp = set(np.arange(max)) - {number}
-		return rd.choice(list(tmp))
-	else:
-		raise IndexError("Choice from 0 to max")
+def choice(interval, max:int):
+	"""
+	给出一个需要挖掉的点集interval
+	以及一个长度为max的母集，返回余下部分的choice
+	"""
+	parent_set = set(list(range(max)))
+	rest = parent_set - interval
+	#print(f"{rest=}, {parent_set=}, {interval=}")
+	return rd.choice(list(rest))
 
-if __name__ == '__main__':
-	demo = Vertex(2, 4, [])
-	print(demo.get_idx, demo.get_color, demo.get_linked)
-	print(demo.addLinked(3))
-	"""Donot Change Demo's private var"""
-	print('*'*30)
-	#****************************************#testGraph:
-	G = GraphByVertex()
-	for idx, clr in zip(np.arange(10), rand.randint(1, 5, 10)):
-		G.addVertex((idx, clr))
-		G.addEdge(idx, choice(idx, 10))
-	#G.addVertex(np.array(3, 4))
-
-	print(G)
