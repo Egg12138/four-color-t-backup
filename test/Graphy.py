@@ -3,7 +3,7 @@
 from collections import abc
 from GraphErrors import GraphErrors as GE
 from numpy import random as rand
-
+from memory_profiler import *
 import numpy as np
 import random as rd
 
@@ -31,10 +31,12 @@ class AdjMatrix:
 """
 Demo = Vertex(index=1, value=2, linked=[])
 Demo.addLinked(2)
+Demo.paint(1)
 Demo.get_idx, 
 Demo.get_color, 
 Demo.get_linked
 Demo.ismarked
+
 其中addLinked内包含一个异常类型VertexIndexError,不允许异常Index和自身相连
 （多点自环在Graph中来检测）
 """
@@ -66,11 +68,16 @@ class Vertex:
 			return True
 		else:
 			return False
-		"""if idx not in self._linked_index and idx >= 0 and idx != self._idx:
-									self._linked_index.append(idx)
-									return True
-								else:
-									raise GE.VertexIndexError("Index Wrong!")"""
+
+
+	def paint(self, colors):
+		if colors in [1, 2, 3, 4]:
+			self._color = colors
+			self._marked = True
+			return True
+		else:
+			return False
+
 	"""
 	To avoid change the value of self.attribute uncarefully.
 	I creat four functions to get attributes of Vertex
@@ -149,6 +156,7 @@ class GraphByVertex:
 	def _out_range(self, idx):
 		return True if len(self.G)-1 < idx else False
 
+	#@profile
 	def addVertex(self, node)->bool:
 		#允许传入一个
 		if isinstance(node, Vertex):
@@ -164,6 +172,7 @@ class GraphByVertex:
 		#TODO 该函数允许接入一个二维数组。。。不过更建议使用Graph生成器来创建Graph
 		pass
 
+	#@profile
 	def addEdge(self, v, w):
 		if v is w or v * w < 0:
 			return None
@@ -174,9 +183,8 @@ class GraphByVertex:
 			return None
 	'''elif self._out_range(v) or self._out_range(w):
 				self._auto_gen(max(v, w))#在先初始化的情况下这个判定可以丢掉了。'''
-	def close_colors(self, index):
-		return np.array((self.G[v_idx].get_color for v_idx in self.G[index].get_linked))
-
+	
+	
 
 
 	def count(self, by='v'):
@@ -188,6 +196,16 @@ class GraphByVertex:
 		else:
 			raise ValueError(f"{by} is not a valid value for arg by")
 
+	def get_color(self, index):
+		return self.G[index].get_color
+
+
+	def get_edge(self, index):
+		return self.G[index].get_linked
+
+	def linked_colors(self, index):
+			return {self.G[v_idx].get_color for v_idx in self.G[index].get_linked}
+
 	def self_loop(self, start_index):#
 		"""
 		深度遍历到最底部，如果得到的index和出发点一样就返回True
@@ -195,18 +213,21 @@ class GraphByVertex:
 		"""
 		pass
 
+	def set_colorof(self, v_idx, clr_code:int):
+		self.G[v_idx].paint(clr_code)
 
-	def get_color(self, index):
-		return self.G[index].get_color
 
-	def get_linked(self, index):
-		return self.G[index].get_linked
+
+
 
 	@property
 	def all_edges(self)->np.ndarray:
 		return [vertex.get_linked for vertex in self.G]
 
-	
+	@property
+	def all_colors(self):
+		return [v.get_color for v in self.G]
+
 
 	@property
 	def get_vertex_by_color(self, key, by='color'):
@@ -233,12 +254,20 @@ class Iterable:
 			return instance.__dict__[self.vars]
 """
 
-def choice(interval, max:int):
+def choice(interval, aux_set):
 	"""
+	interval: Sequence or Set.
 	给出一个需要挖掉的点集interval
 	以及一个长度为max的母集，返回余下部分的choice
 	"""
-	parent_set = set(list(range(max)))
+	if isinstance(interval, abc.Sequence):
+		interval = set(interval)
+	if isinstance(aux_set, int):
+		parent_set = set(list(range(aux_set)))
+	elif isinstance(aux_set, abc.Sequence):
+		parent_set = set(aux_set)
+	else:
+		parent_set = aux_set
 	rest = parent_set - interval
 	#print(f"{rest=}, {parent_set=}, {interval=}")
 	return rd.choice(list(rest))
