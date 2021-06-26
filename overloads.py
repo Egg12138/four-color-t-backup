@@ -1,4 +1,5 @@
 registry = {}
+"""一个重载的装饰器，不用了……"""
 
 class MultiMethod:
 	def __init__(self, name):
