@@ -1,14 +1,19 @@
 # README
 
 
-现在看来，有点危了。
-
+两个调试库
+都可以注释掉，不是必要的
+如果需要：
 pip install memory-profile以安装内存的调试器。
 如果用的话就把代码中的`from memory_profiler`和__main__.py里的`@profile`的注释消掉。启动的时候，用**终端**启动`python -m memory_profiler __main__.py`即可。
 cProfile是内置的库（应该是，如果没有也是pip install cProfile`)
 使用cProfile来查看时间分析的话把`cProfile.run(....)`的注释消掉就行。
 
-
+他们调试的文件结果，我有输出三份
+* funcTimeLog
+* funcMemLog
+* TotaltestLog
+可供参考
 ## TODOs
 1. 完成四色定理的“验证”
 2. **进行地图上色**， 最优方案是作图和ppt里一样的那种，找不到就用结点的那种作图吧
