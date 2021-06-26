@@ -3,6 +3,11 @@
 
 现在看来，有点危了。
 
+pip install memory-profile以安装内存的调试器。
+如果用的话就把代码中的`from memory_profiler`和__main__.py里的`@profile`的注释消掉。启动的时候，用**终端**启动`python -m memory_profiler __main__.py`即可。
+cProfile是内置的库（应该是，如果没有也是pip install cProfile`)
+使用cProfile来查看时间分析的话把`cProfile.run(....)`的注释消掉就行。
+
 
 ## TODOs
 1. 完成四色定理的“验证”

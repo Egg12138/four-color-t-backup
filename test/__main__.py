@@ -19,9 +19,6 @@ import sys
 
 colors = ['red', 'yellow', 'blue', 'green']#Enumeration...
 
-def getrestlist(a, b):
-	return list(b - a)
-
 
 def RandGenAdj(max_v, max_deg):
 
@@ -68,12 +65,11 @@ def nearFilltry(G:GraphByVertex):
 def fill4clr(G:GraphByVertex):
 	#能找到优解
 	degree_of_vertexes = G.idx_deg_mapping
-
 	pass
 
 #@profile
-
 def main(maxVnum, maxDegNum):
+
 	G = RandGenAdj(maxVnum, maxDegNum)
 	nearFilltry(G)
 	Gcount = G.count(by='v')
@@ -87,6 +83,6 @@ def main(maxVnum, maxDegNum):
 
 
 if __name__ == '__main__':
-	#cProfile.run('main(10, 3, colors=colors)')
+	cProfile.runctx('main(20, 3)', None, locals())
 	for i in range(50):
 		main(20, 3)
