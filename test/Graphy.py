@@ -110,13 +110,14 @@ class GraphList(list):
 	#这个版本继承list，等下看一下接口会不会有问题。
 
 	def __init__(self):
-		self.Gl = []
+		self.G = []
 
-	@property
+	
+	#@property
 	def get_linked_indexes(self)->np.ndarray:
 		return np.array((vertex.get_linked for vertex in self.G))
 
-	@property
+	#@property
 	def get_vertex_by_color(self, key, by='color')->np.ndarray:
 		"""按照颜色来访问,如果按index访问，则更应该使用GraphByVertex[index]"""
 		if 'color' == by:
@@ -141,6 +142,7 @@ class GraphByVertex:
 		#return np.array_repr(np.array((repr(vertex) for vertex in self.G)))
 		for node in self.G:
 			print(node)
+			print([self.get_color(idx) for idx in node.get_linked])
 		return ""
 	def __getitem__(self, index):
 		return self.G[index]
@@ -261,7 +263,7 @@ def choice(interval, aux_set):
 	以及一个长度为max的母集，返回余下部分的choice
 	"""
 	if isinstance(interval, abc.Sequence):
-		interval = set(interval)
+		interval = set(interval)	
 	if isinstance(aux_set, int):
 		parent_set = set(list(range(aux_set)))
 	elif isinstance(aux_set, abc.Sequence):
@@ -270,5 +272,5 @@ def choice(interval, aux_set):
 		parent_set = aux_set
 	rest = parent_set - interval
 	#print(f"{rest=}, {parent_set=}, {interval=}")
-	return rd.choice(list(rest))
+	return rand.choice(list(rest))
 
