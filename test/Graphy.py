@@ -78,6 +78,7 @@ class Vertex:
 		else:
 			return False
 
+
 	"""
 	To avoid change the value of self.attribute uncarefully.
 	I creat four functions to get attributes of Vertex
@@ -96,6 +97,7 @@ class Vertex:
 	@property
 	def ismarked(self):
 		return self._marked
+	
 
 
 #APIs of GraphList:
@@ -107,33 +109,22 @@ Demo =
 """
 
 class GraphList(list):
-	#这个版本继承list，等下看一下接口会不会有问题。
-
+	#弃用
 	def __init__(self):
 		self.G = []
-
-	
 	#@property
 	def get_linked_indexes(self)->np.ndarray:
 		return np.array((vertex.get_linked for vertex in self.G))
-
-	#@property
-	def get_vertex_by_color(self, key, by='color')->np.ndarray:
-		"""按照颜色来访问,如果按index访问，则更应该使用GraphByVertex[index]"""
-		if 'color' == by:
-			return np.array((v for v in self.G if v.get_color == key ))
-		elif 'index' == by:
-			self.__getitem__(key)
-
 
 class GraphByVertex:
 	"""另一个版本，不继承list和ndarray, 但是会使用ndarray为部分的数据类型,
 	采用无向图
 	我们这个类用邻接表， 
 	""" 
-	def __init__(self):
+	def __init__(self, MaxVNum):
 		self.G = []
-
+		self._max_deg = 0
+		self.MaxVNum = MaxVNum
 	def __repr__(self):
 		"""
 		建议使用repr(G)来打印，使用print会需要一个返回值 
@@ -150,6 +141,7 @@ class GraphByVertex:
 	def __len__(self):
 		"""Number of vertexes"""
 		return len(self.G)
+
 
 
 	def _auto_gen(self, idx):
@@ -179,8 +171,10 @@ class GraphByVertex:
 		if v is w or v * w < 0:
 			return None
 		elif v not in self.G[w].get_linked and w not in self.G[v].get_linked:
-			self.G[v].addLinked(w)
-			self.G[w].addLinked(v)
+			if len(self.G[v].get_linked) < self.MaxVNum:
+				self.G[v].addLinked(w)
+			if len(self.G[w].get_linked) < self.MaxVNum:
+				self.G[w].addLinked(v)
 		else:
 			return None
 	'''elif self._out_range(v) or self._out_range(w):
@@ -202,8 +196,10 @@ class GraphByVertex:
 		return self.G[index].get_color
 
 
-	def get_edge(self, index):
+	def get_edgesof(self, index):
 		return self.G[index].get_linked
+
+	
 
 	def linked_colors(self, index):
 			return {self.G[v_idx].get_color for v_idx in self.G[index].get_linked}
@@ -241,9 +237,15 @@ class GraphByVertex:
 			return [v for v in self.G if v.get_color == key]
 		elif 'index' == by:
 			self.__getitem__(key)
+	@property
+	def idx_deg_mapping(self):
+		return {v.get_idx: len(v.get_linked) for v in self.G}
 
-
-
+	'''@property
+	def max_degree(self):
+		self._max_deg = max([len(i.get_linked) for i in self.G])
+		return self._max_deg'''
+	
 """
 class Iterable:
 	def __init__(self, vars):

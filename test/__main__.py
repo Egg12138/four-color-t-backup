@@ -1,5 +1,6 @@
 
-from algorithm.Travel import *
+
+from algorithm.Random import choicerest as ArrayChoice
 from collections import abc
 from Graphy import GraphByVertex, Vertex
 from numpy import random as rand
@@ -18,11 +19,9 @@ import sys
 
 colors = ['red', 'yellow', 'blue', 'green']#Enumeration...
 
+def getrestlist(a, b):
+	return list(b - a)
 
-def ArrayChoice(used_set:set, src_set:set):
-	rest = list(src_set - used_set)
-	return rand.choice(rest)
-	
 
 def RandGenAdj(max_v, max_deg):
 
@@ -31,7 +30,7 @@ def RandGenAdj(max_v, max_deg):
 	max degree : max number of linked vertex a vertex can have
 	"""
 	maxvset = set(list(range(max_v)))
-	G = GraphByVertex()
+	G = GraphByVertex(max_v)
 	for idx in range(max_v):
 		G.addVertex(Vertex(idx, 0, []))
 
@@ -44,13 +43,20 @@ def RandGenAdj(max_v, max_deg):
 			G.addEdge(idx, w)
 	return G
 
+def RandGenAdj_LessZero(max_v, max_deg):
+	"""
+	上面的一种生成方式简单，但是可能生成过多的零邻接节点
+	"""
+	pass
+
 
 def randfill(G:GraphByVertex):
 	#Start the Process of filling
 	for idx, clr in zip(G.G, rand.randint(1, 5, len(G))):
 		G.set_colorof(idx.get_idx, clr)
 
-def fill4clr(G:GraphByVertex):
+def nearFilltry(G:GraphByVertex):
+	#在速度要求下可以用这种方式生成，但这种可能导致找不到解
 	for idx in range(len(G)):
 		used_clr = G.linked_colors(idx) #used_clr is a list
 		if used_clr is None:
@@ -59,14 +65,21 @@ def fill4clr(G:GraphByVertex):
 		w = ArrayChoice(set(used_clr), {0, 1, 2, 3, 4})
 		G.set_colorof(idx, w)
 
+def fill4clr(G:GraphByVertex):
+	#能找到优解
+	degree_of_vertexes = G.idx_deg_mapping
+
+	pass
+
 #@profile
-def main(genV, genDeg):
-	G = RandGenAdj(genV, genDeg)
-	fill4clr(G)
+
+def main(maxVnum, maxDegNum):
+	G = RandGenAdj(maxVnum, maxDegNum)
+	nearFilltry(G)
 	Gcount = G.count(by='v')
 	print(f"{Gcount=}")
 	print(f"{G.all_colors=}")
-	print(G)
+	#rint(G)
 
 
 
