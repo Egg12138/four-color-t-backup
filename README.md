@@ -1,7 +1,7 @@
 # README
 
 
-两个调试库
+两个调试库memory_profiler, cProfile
 都可以注释掉，不是必要的
 如果需要：
 pip install memory-profile以安装内存的调试器。
@@ -13,12 +13,17 @@ cProfile是内置的库（应该是，如果没有也是pip install cProfile`)
 * funcTimeLog
 * funcMemLog
 * TotaltestLog
+在终端下可以把输出重定向
+`python -m memory_profiler -o 接受memory性能分析结果的文件名 cProfile -o 接受cProfile性能分析结果的文件名 __main__.py > result`
+
+
+
 可供参考
 ## TODOs
 1. 完成四色定理的“验证”
 2. **进行地图上色**， 最优方案是作图和ppt里一样的那种，找不到就用结点的那种作图吧
 3. 改进算法
-
+4. 把注释里的英文都转成中文，之前没有全部转完，习惯了。。。
 ## APIs
 
 提供了
@@ -39,6 +44,7 @@ Vertex有如下APIs:
 
 GraphByVertex有如下的APIs:
 G = GraphByVertex()
+* G[index]可以访问到index处的节点
 * G.addVertex(node:Vertex OR Sequence)添加一个节点(可以添加节点对象，或者输入一个节点初始化序列)
 * G.addEdge(v:index, w:index)给两个不同的index代表的结点添加一条Edge
 * G.count(by='v')统计节点数'v', 总Edges数(Degree)'d'
@@ -46,7 +52,14 @@ G = GraphByVertex()
 * G.get\_edgesof(index)获取index对应节点的所有邻接点
 * G.linked\_colors(index)获取index对应节点的所有邻接点的颜色
 * G.set\_colorof(index, color)给index对应的节点上色
-
+* G.all_edges获得一个列表，每个元素是一个节点存储的邻接点index列表
+* G.all_colors获得所有颜色，存储在一个列表里
+* G.get_vertex_by_color(key, by='color')*刚刚发现有一个装饰器多了，勿用*, 把这行def get_vertex_by_color前面的·@property`删掉就行
+by color:则key输入颜色代码，返回所有这个颜色的节点对象
+by index:就是正常的key=index等价于G[index]
+* G.idx_deg_mapping返回index对应邻接点index列表的字典，比如4个节点0,1,2,3有链接关系0--1,2  1--0,3   2--1,4  3--1
+那就返回{0:[1,2], 1:[0,3], 2:[1,4], 3:[1]}
+* G.self_loop()判断时候自环，这个暂时没有用。
 提供一个函数
 ArrayChoice(used\_set, src\_set)
 在未使用过的集合中随机抽取。用在随机连接点，以及相邻点染色的时候。
