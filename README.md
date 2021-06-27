@@ -35,7 +35,8 @@ Vertex，基本结点
 
 Vertex有如下APIs:
 * Demo = Vertex(index=1, value=2, linked=[])
-* Demo.addLinked(2)添加邻接点
+* Demo.addLinked(2)添加邻接点INDEX
+* Demo.addLinkedNode(Vertex(2, 3, []))添加邻接点对象（在染色中方便调用)
 * Demo.paint(1)结点染色
 * Demo.get\_idx, 获取节点index
 * Demo.get\_color, 获取节点color
@@ -54,15 +55,65 @@ G = GraphByVertex()
 * G.set\_colorof(index, color)给index对应的节点上色
 * G.all_edges获得一个列表，每个元素是一个节点存储的邻接点index列表
 * G.all_colors获得所有颜色，存储在一个列表里
+* G.vertexes获得所有结点对象
 * G.get_vertex_by_color(key, by='color')*刚刚发现有一个装饰器多了，勿用*, 把这行def get_vertex_by_color前面的·@property`删掉就行
 by color:则key输入颜色代码，返回所有这个颜色的节点对象
 by index:就是正常的key=index等价于G[index]
 * G.idx_deg_mapping返回index对应邻接点index列表的字典，比如4个节点0,1,2,3有链接关系0--1,2  1--0,3   2--1,4  3--1
 那就返回{0:[1,2], 1:[0,3], 2:[1,4], 3:[1]}
 * G.self_loop()判断时候自环，这个暂时没有用。
-提供一个函数
-ArrayChoice(used\_set, src\_set)
+* G.sort_by_degree()对G进行排序，只是调整G遍历的顺序，并不调整节点本身的index(因为染色需要从度数高的节点开始)
+
+#Logs
+* 提供了一个函数
+choicerest(used\_set, src\_set)
 在未使用过的集合中随机抽取。用在随机连接点，以及相邻点染色的时候。
+
+* 增加了一个模块：DataConverter
+将图结构转化为适配networkx接口的输出。
+
+* 结构调整为：
+```shell
+├── DataStructure
+│   └── __init__.py
+├── GraphErrors
+│   ├── GraphErrors.py
+│   ├── __init__.py
+│   └── __pycache__
+│       ├── GraphErrors.cpython-38.pyc
+│       ├── GraphErrors.pypy37.pyc
+│       ├── __init__.cpython-38.pyc
+│       └── __init__.pypy37.pyc
+├── Graphy.py
+├── TotalTestLog
+├── __init__.py
+├── __main__.py
+├── __pycache__
+│   ├── Graphy.cpython-38.pyc
+│   └── Graphy.pypy37.pyc
+├── algorithm
+│   ├── DataConverter.py
+│   ├── Graph_gen.py
+│   ├── Painter.py
+│   ├── Random.py
+│   ├── Travel.py
+│   ├── __init__.py
+│   └── __pycache__
+│       ├── DataConverter.cpython-38.pyc
+│       ├── Graph_gen.cpython-38.pyc
+│       ├── Painter.cpython-38.pyc
+│       ├── Random.cpython-38.pyc
+│       ├── Travel.cpython-38.pyc
+│       ├── Travel.pypy37.pyc
+│       ├── __init__.cpython-38.pyc
+│       └── __init__.pypy37.pyc
+├── funcMemLog
+├── funcTimeLog
+├── project_tree
+├── run time.ipynb
+└── simple_test_log
+```
+
 ## 解释
 
 Vertex,GraphByVertex这两个类主要结构都是列表和字典，但是进行了一点封装。
