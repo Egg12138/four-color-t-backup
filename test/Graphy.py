@@ -1,11 +1,11 @@
 #-*-coding=utf-8-*-
 #Graph Class
 from collections import abc
+from sys import version
 from GraphErrors import GraphErrors as GE
 from numpy import random as rand
 from memory_profiler import *
 import numpy as np
-import random as rd
 
 
 class AdjMatrix:
@@ -42,15 +42,15 @@ Demo.ismarked
 """
 class Vertex:
 
-	__slots__ = ['_idx', '_color', '_linked_index', '_marked']#Save memory
+	__slots__ = ['_idx', '_color', '_linked_index', '_ismarked', '_linked_nodes']#Save memory
 
 	def __init__(self, index, value=0, linked=[], marked=False):
 		
 		self._idx = index#idx'th vertex -> color
 		self._color = value#Value can be a symbol, a number or anything
 		self._linked_index = linked
-		self._marked = marked
-
+		self._ismarked = marked
+		self._linked_nodes = []
 	def __repr__(self):
 
 		length = len(self._linked_index)
@@ -61,27 +61,32 @@ class Vertex:
 		string += f"   :{length} edge(s)"
 		return string 
 
-	def addLinked(self, idx:int)->bool:
+	def addLinked(self, idx:int):
+		"""
+		添加邻接index
+		"""
 		#将Index错误的检测传到Graph里，这里只需要负责添加就行
 		if idx >= 0:
 			self._linked_index.append(idx)
-			return True
-		else:
-			return False
+			
+	def addLinkedNode(self, node):
+		"""
+		直接添加邻接的nodes，在染色时方便一点
+		"""
+		if node.get_idx is not self._idx:
+			self._linked_nodes.append(node)
 
 
 	def paint(self, colors):
 		if colors in [1, 2, 3, 4]:
 			self._color = colors
-			self._marked = True
+			self._ismarked = True
 			return True
 		else:
 			return False
 
 
 	"""
-	To avoid change the value of self.attribute uncarefully.
-	I creat four functions to get attributes of Vertex
 	考虑到可能会不小心访问属性时修改了属性值，引入四个专门的属性访问的函数
 	"""
 
@@ -96,16 +101,16 @@ class Vertex:
 		return self._linked_index
 	@property
 	def ismarked(self):
-		return self._marked
-	
+		return self._ismarked
+	@property
+	def linked_nodes(self):
+		return self._linked_nodes
 
 
 #APIs of GraphList:
 
 """
-Demo =
-
-
+见README.md
 """
 
 class GraphList(list):
@@ -128,7 +133,7 @@ class GraphByVertex:
 	def __repr__(self):
 		"""
 		建议使用repr(G)来打印，使用print会需要一个返回值 
-		建议使用Self[index].value来访问颜色(以及删了额外的接口了)"""
+		建议使用Self[index].value来访问颜色(已经删了额外的接口了)"""
 		#return np.array((vertex for vertex in self.G))
 		#return np.array_repr(np.array((repr(vertex) for vertex in self.G)))
 		for node in self.G:
@@ -141,8 +146,6 @@ class GraphByVertex:
 	def __len__(self):
 		"""Number of vertexes"""
 		return len(self.G)
-
-
 
 	def _auto_gen(self, idx):
 		self.G.append([[] for i in range(2 * idx)])
@@ -173,8 +176,10 @@ class GraphByVertex:
 		elif v not in self.G[w].get_linked and w not in self.G[v].get_linked:
 			if len(self.G[v].get_linked) < self._max_deg:
 				self.G[v].addLinked(w)
+				self.G[v].addLinkedNode(self.G[w])
 			if len(self.G[w].get_linked) < self._max_deg:				
 				self.G[w].addLinked(v)
+				self.G[w].addLinkedNode(self.G[v])
 		else:
 			return None
 	'''elif self._out_range(v) or self._out_range(w):
@@ -219,7 +224,20 @@ class GraphByVertex:
 	def set_colorof(self, v_idx, clr_code:int):
 		self.G[v_idx].paint(clr_code)
 
-
+	def sort_by_degree(self):
+		tmplist = []
+		lengths = [len(vertex.get_linked) for vertex in self.G]
+		print(f"{lengths=}")
+		while any(lengths) != 0:
+			for i in range(len(lengths)):
+				if lengths[i] == max(lengths):
+					tmplist.append(self.G[i])
+					lengths[i] = 0
+				print(lengths)
+		print('*'*20)
+		if len(tmplist) == len(self.G):
+			print(tmplist)
+		self.G = tmplist
 
 
 
@@ -234,7 +252,9 @@ class GraphByVertex:
 	@property
 	def all_colors(self):
 		return [v.get_color for v in self.G]
-
+	@property
+	def vertexes(self):
+		return self.G
 
 	@property
 	def get_vertex_by_color(self, key, by='color'):
