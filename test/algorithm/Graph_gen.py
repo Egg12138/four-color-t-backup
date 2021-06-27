@@ -30,6 +30,9 @@ def RandGenAdj(max_v, max_deg):
 		while len(G.get_edgesof(idx)) == 0: 
 			w = ar.choicerest({idx}, maxvset)
 			G.addEdge(idx, w)
+	print(f"{G.all_edges=}")
+	G.sort_by_degree()
+	print(f"{G.all_edges=}")
 	print('\n')
 	return G
 
@@ -39,3 +42,6 @@ def randfill(G:GraphByVertex):
 	#Start the Process of filling
 	for idx, clr in zip(G.G, rand.randint(1, 5, len(G))):
 		G.set_colorof(idx.get_idx, clr)
+
+def randGen_sort(max_v, max_deg):
+	pass

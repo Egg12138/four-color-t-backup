@@ -1,4 +1,5 @@
 
+from networkx.algorithms.centrality import degree_alg
 from algorithm.DataConverter import clear0
 from algorithm.Graph_gen import RandGenAdj
 from algorithm.Painter import *
@@ -26,27 +27,26 @@ color_list = ['gray', 'red', 'yellow', 'blue', 'green']#Enumeration...
 #@profile
 def main(maxVnum, maxDegNum, mode='not print'):
 
+	#Generate Graph
 	G = RandGenAdj(maxVnum, maxDegNum)
+	#Paint the Graph
 	nearFilltry(G)
 	Gcount = G.count(by='v')
 	print(f"{Gcount=}")
 	print(f"{G.all_edges=}|||{G.all_colors=}")
 	if mode == 'print':
 		print(G)
-	all_edges = G.all_edges
-	all_colors = G.all_colors
-	dealt_pairs, dealt_colors = clear0(all_edges, all_colors)
-	print(f"{dealt_pairs=}\n{all_edges=}\n\n{dealt_colors=}\n{all_colors=}")
+	#Draw
+	dealt_pairs, dealt_colors = clear0(G.all_edges, G.all_colors)
 	Gnx = nx.Graph()
 	Gnx.add_edges_from(dealt_pairs)#传入无向图库
-	colors = [color_list[clr_code] for clr_code in dealt_colors]
-	nx.draw_networkx(Gnx, node_color=colors)
+	#colors = [color_list[clr_code] for clr_code in dealt_colors]
+	nx.draw_networkx(Gnx, node_color=dealt_colors)
 	plt.show()
-
 
 
 
 
 if __name__ == '__main__':
 	#cProfile.runctx('main(20, 3)', None, locals())
-	main(8, 3, sys.argv[1])
+	main(10, 3, sys.argv[1])
