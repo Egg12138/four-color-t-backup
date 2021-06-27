@@ -121,9 +121,9 @@ class GraphByVertex:
 	采用无向图
 	我们这个类用邻接表， 
 	""" 
-	def __init__(self, MaxVNum):
+	def __init__(self, MaxVNum, MaxDeg):
 		self.G = []
-		self._max_deg = 0
+		self._max_deg = MaxDeg
 		self.MaxVNum = MaxVNum
 	def __repr__(self):
 		"""
@@ -171,9 +171,9 @@ class GraphByVertex:
 		if v is w or v * w < 0:
 			return None
 		elif v not in self.G[w].get_linked and w not in self.G[v].get_linked:
-			if len(self.G[v].get_linked) < self.MaxVNum:
+			if len(self.G[v].get_linked) < self._max_deg:
 				self.G[v].addLinked(w)
-			if len(self.G[w].get_linked) < self.MaxVNum:
+			if len(self.G[w].get_linked) < self._max_deg:				
 				self.G[w].addLinked(v)
 		else:
 			return None
@@ -199,10 +199,15 @@ class GraphByVertex:
 	def get_edgesof(self, index):
 		return self.G[index].get_linked
 
-	
+	def networkx_style_node(self):
+		"""
+		以networkx无向图的节点样式返回
+
+		"""
+		pass
 
 	def linked_colors(self, index):
-			return {self.G[v_idx].get_color for v_idx in self.G[index].get_linked}
+		return {self.G[v_idx].get_color for v_idx in self.G[index].get_linked}
 
 	def self_loop(self, start_index):#
 		"""
@@ -219,7 +224,11 @@ class GraphByVertex:
 
 
 	@property
-	def all_edges(self)->np.ndarray:
+	def all_edges(self)->list:
+		"""
+		用这个返回[[1], [2, 0], [1]]这样列表，可以直接传给networkx
+		然后上色的时候，额外传入参数G.all_colors就可以
+		"""
 		return [vertex.get_linked for vertex in self.G]
 
 	@property

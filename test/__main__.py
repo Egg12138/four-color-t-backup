@@ -1,11 +1,15 @@
 
-
-from algorithm.Random import choicerest as ArrayChoice
+from algorithm.DataConverter import clear0
+from algorithm.Graph_gen import RandGenAdj
+from algorithm.Painter import *
 from collections import abc
 from Graphy import GraphByVertex, Vertex
 from numpy import random as rand
-import cProfile
 from memory_profiler import *
+
+import matplotlib.pyplot as plt
+import cProfile
+import networkx as nx
 import numpy as np
 import sys
 
@@ -17,72 +21,32 @@ import sys
 """
 
 
-colors = ['red', 'yellow', 'blue', 'green']#Enumeration...
-
-
-def RandGenAdj(max_v, max_deg):
-
-	"""
-	max vertex  : max number of vertexes to be generated
-	max degree : max number of linked vertex a vertex can have
-	"""
-	maxvset = set(list(range(max_v)))
-	G = GraphByVertex(max_v)
-	for idx in range(max_v):
-		G.addVertex(Vertex(idx, 0, []))
-
-	for idx in range(max_v):
-		degree_per_v = rand.randint(0, max_deg)#每个节点的邻接节点数， 0个到max_deg个
-		tmp = {idx}
-		for i in range(degree_per_v):
-			w = ArrayChoice(tmp, maxvset)
-			tmp.add(w)
-			G.addEdge(idx, w)
-	return G
-
-def RandGenAdj_LessZero(max_v, max_deg):
-	"""
-	上面的一种生成方式简单，但是可能生成过多的零邻接节点
-	"""
-	pass
-
-
-def randfill(G:GraphByVertex):
-	#Start the Process of filling
-	for idx, clr in zip(G.G, rand.randint(1, 5, len(G))):
-		G.set_colorof(idx.get_idx, clr)
-
-def nearFilltry(G:GraphByVertex):
-	#在速度要求下可以用这种方式生成，但这种可能导致找不到解
-	for idx in range(len(G)):
-		used_clr = G.linked_colors(idx) #used_clr is a list
-		if used_clr is None:
-			continue
-		#print(used_clr)
-		w = ArrayChoice(set(used_clr), {0, 1, 2, 3, 4})
-		G.set_colorof(idx, w)
-
-def fill4clr(G:GraphByVertex):
-	#能找到优解
-	degree_of_vertexes = G.idx_deg_mapping
-	pass
+color_list = ['gray', 'red', 'yellow', 'blue', 'green']#Enumeration...
 
 #@profile
-def main(maxVnum, maxDegNum):
+def main(maxVnum, maxDegNum, mode='not print'):
 
 	G = RandGenAdj(maxVnum, maxDegNum)
 	nearFilltry(G)
 	Gcount = G.count(by='v')
 	print(f"{Gcount=}")
-	print(f"{G.all_colors=}")
-	#rint(G)
-
+	print(f"{G.all_edges=}|||{G.all_colors=}")
+	if mode == 'print':
+		print(G)
+	all_edges = G.all_edges
+	all_colors = G.all_colors
+	dealt_pairs, dealt_colors = clear0(all_edges, all_colors)
+	print(f"{dealt_pairs=}\n{all_edges=}\n\n{dealt_colors=}\n{all_colors=}")
+	Gnx = nx.Graph()
+	Gnx.add_edges_from(dealt_pairs)#传入无向图库
+	colors = [color_list[clr_code] for clr_code in dealt_colors]
+	nx.draw_networkx(Gnx, node_color=colors)
+	plt.show()
 
 
 
 
 
 if __name__ == '__main__':
-	cProfile.runctx('main(20, 3)', None, locals())
-	for i in range(50):
-		main(20, 3)
+	#cProfile.runctx('main(20, 3)', None, locals())
+	main(8, 3, sys.argv[1])
