@@ -1,5 +1,6 @@
 # README
 
+## 队内文档
 
 两个调试库memory_profiler, cProfile
 都可以注释掉，不是必要的
@@ -17,8 +18,10 @@ cProfile是内置的库（应该是，如果没有也是pip install cProfile`)
 `python -m memory_profiler -o 接受memory性能分析结果的文件名 cProfile -o 接受cProfile性能分析结果的文件名 __main__.py > result`
 
 
-
-可供参考
+## Ana
+quick染色，20，4，20， 下速度在0.3s左右（包括保存图片和刷新画布）最慢0.36s(degree一多就挺多五色的……)
+quick染色的内存占用124Mb, 因为通过循环做性能测试，内存总是会有一点增量，所以采用前两次循环的
+DeepFirst染色同样条件下内存占用略大。时间大约1.1s（但起码能染色完成...）
 
 ## TODOs
 1. ~~完成四色定理的“验证”~~
