@@ -1,5 +1,6 @@
 #Painter!
 
+from os import stat
 from Graphy import GraphByVertex, Vertex
 from algorithm.Random import choicerest
 
@@ -16,7 +17,6 @@ def nearFilltry(G:GraphByVertex):
 		#print(used_clr)
 		w = choicerest(set(used_clr), {0, 1, 2, 3, 4})
 		G.set_colorof(idx, w)
-
 
 def fillVertex(node, spec_clr:int)->bool:
 	"""
@@ -43,13 +43,19 @@ def fac_fillVertex(node, spec_clr:int)->bool:
 		return FAILED
 
 
-def fill4clr(G:GraphByVertex):
-	#能找到优解
-	#排好序的Graph， 但只是开始搜索的顺序改变，并没有该节点本身
-	start_idnex = 0
-	clr = color_codes[0]
-	for vertex in G.vertexes:
-		if fillVertex(vertex, clr) and not vertex.ismarked:
-			pass	
-			
+def DeepFirstFill(G:GraphByVertex, node:Vertex):
+	#递归效率低，这里提供非递归方式
+	#TODO 非递归染色
 	pass
+
+def DeepFirstFillbyIndex(G:GraphByVertex, idx:int)->bool:
+	for clr in color_codes:
+		status = SUCCESSED
+		G.set_colorof(idx, clr)
+		print(G[idx])
+		if clr in [G[v].get_color for v in G.get_edgesof(idx)]:
+			status = FAILED
+		if status and (idx == G.MaxVNum - 1 or DeepFirstFillbyIndex(G, idx+1)):
+			return SUCCESSED
+
+	return FAILED
