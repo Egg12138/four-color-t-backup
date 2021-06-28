@@ -1,12 +1,9 @@
+#-*-coding=utf-8-*-
 #data_dealer
 
-"""
-处理输出。剔除掉零邻接的点。并且返回一个
 
-"""
-from networkx.algorithms import link_prediction
 import GraphErrors.GraphErrors as GG
-from Graphy import GraphByVertex, Vertex
+from Graphy import GraphByVertex
 
 
 def delta(idx, alist):
@@ -17,8 +14,7 @@ def delta(idx, alist):
     return cnt
 
 def clear0(alist, clrs_list):
-    """转换成两两点对， 我们删去没有邻接点的节点
-    第一个循环得到一个全部节点非空的列表， 以及那些空列表的index,现在去掉那些index对应的点的颜色"""
+    """常规转化"""
     result = []
     toberm = []
 
@@ -33,7 +29,16 @@ def clear0(alist, clrs_list):
     newcolors = [clr for idx,clr in enumerate(clrs_list) if idx not in toberm]
     return result, newcolors
 
-def clear1(graph:GraphByVertex):
+def clear1(graph:GraphByVertex)->tuple:
+    """
+    Return result, newcolors
+    首先去除掉可能存在的0邻接点（虽然现在的生成函数是不会生成0邻接点）
+    然后转化成能够被networkx.Graph接收的形式：result= ((0, 1), (0, 2)...(10, 6))
+    然后对颜色列表的顺序进行转化
+    因为networkx是按照0-->1, 2, 3; 1-->0, 3, 5; 2-->0, 6; 3-->0, 4 ==> 0, 1, 2, 3, 5, 6...
+    的这个顺序染色的
+    
+    """
     result = []
     toberm = []
     newcolors = []
@@ -55,31 +60,9 @@ def clear1(graph:GraphByVertex):
         if not graph[later_index].ismarked:
             newcolors.append(graph[later_index].get_color)
             graph[later_index].set_marked()
-        '''
-    for vertex in graph.G:
-        if not vertex.ismarked:
-            newcolors.append(vertex.get_color)
-            vertex.set_marked()
-            print(f"{newcolors}<--{vertex.get_color}:{vertex.get_idx}")
-        for linked_node in vertex.linked_nodes:
-            if not linked_node.ismarked:
-                newcolors.append(linked_node.get_color)
-                print(f"{newcolors}<--{linked_node.get_color}:{vertex.get_idx}")
-                linked_node.set_marked()'''
-        """   marker = False
-
-    for idx1, clr_idx in zip(result, newcolors):
-            print(f"{idx1=}, {graph[idx1[0]].get_color=}, {clr_idx=}")
-            if graph.get_color(idx1[0]) == clr_idx:
-                marker = True
-            else:
-                print(graph.get_color(idx1[0]), "----", clr_idx)
-                marker = False
-                break
-        
-        if marker and all(newcolors) in clrs_list:"""
+    #check:
+    if not all(newcolors) in graph.all_colors:
+        raise GG.UnPairedError("Colors Unpaired!")
     return result, newcolors
-   
-    print(result)
-    print(newcolors)
+
     

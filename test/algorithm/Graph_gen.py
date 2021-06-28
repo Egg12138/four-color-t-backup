@@ -26,19 +26,18 @@ def RandGenAdj(max_v, max_deg):
 			print(w, end=';')
 			tmp.add(w)
 			G.addEdge(idx, w)
-
 		while len(G.get_edgesof(idx)) == 0: 
 			w = ar.choicerest({idx}, maxvset)
 			G.addEdge(idx, w)
-	print(f"{G.all_edges=}")
-	G.sort_by_degree()
-	print(f"{G.all_edges=}")
+	#print(f"{G.all_edges=}")
+	#G.sort_by_degree()
+	#print(f"{G.all_edges=}")
 	print('\n')
 	return G
 
 
 def randfill(G:GraphByVertex):
-	"""随机快填"""
+	"""随机染色"""
 	#Start the Process of filling
 	for idx, clr in zip(G.G, rand.randint(1, 5, len(G))):
 		G.set_colorof(idx.get_idx, clr)
