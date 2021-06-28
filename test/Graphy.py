@@ -84,7 +84,10 @@ class Vertex:
 			return True
 		else:
 			return False
-
+	def set_marked(self):
+		self._ismarked = True
+	def set_unmarked(self):
+		self._ismarked = False
 
 	"""
 	考虑到可能会不小心访问属性时修改了属性值，引入四个专门的属性访问的函数
@@ -171,15 +174,16 @@ class GraphByVertex:
 
 	#@profile
 	def addEdge(self, v, w):
-		if v is w or v * w < 0:
+		if v == w or v * w < 0:
 			return None
 		elif v not in self.G[w].get_linked and w not in self.G[v].get_linked:
-			if len(self.G[v].get_linked) < self._max_deg:
+			if len(self.G[v].get_linked) > self.MaxVNum or len(self.G[w].get_linked) > self.MaxVNum:
+				return None
+			else:
 				self.G[v].addLinked(w)
-				self.G[v].addLinkedNode(self.G[w])
-			if len(self.G[w].get_linked) < self._max_deg:				
+				self.G[v].addLinkedNode(self.G[w])				
 				self.G[w].addLinked(v)
-				self.G[w].addLinkedNode(self.G[v])
+				self.G[w].addLinkedNode(self.G[v])	
 		else:
 			return None
 	'''elif self._out_range(v) or self._out_range(w):
@@ -207,7 +211,6 @@ class GraphByVertex:
 	def networkx_style_node(self):
 		"""
 		以networkx无向图的节点样式返回
-
 		"""
 		pass
 
@@ -225,18 +228,15 @@ class GraphByVertex:
 		self.G[v_idx].paint(clr_code)
 
 	def sort_by_degree(self):
+		print("Before Sorted: G=", self.G)
 		tmplist = []
 		lengths = [len(vertex.get_linked) for vertex in self.G]
-		print(f"{lengths=}")
 		while any(lengths) != 0:
 			for i in range(len(lengths)):
-				if lengths[i] == max(lengths):
+				if lengths[i] == max(lengths) and lengths[i] != 0:
 					tmplist.append(self.G[i])
 					lengths[i] = 0
-				print(lengths)
 		print('*'*20)
-		if len(tmplist) == len(self.G):
-			print(tmplist)
 		self.G = tmplist
 
 
@@ -267,8 +267,13 @@ class GraphByVertex:
 		elif 'index' == by:
 			self.__getitem__(key)
 	@property
+	def indexes(self):
+		return [v.get_idx for v in self.G]
+
+	@property
 	def idx_deg_mapping(self):
 		return {v.get_idx: len(v.get_linked) for v in self.G}
+
 
 	'''@property
 	def max_degree(self):

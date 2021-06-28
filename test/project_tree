@@ -1,0 +1,41 @@
+.
+├── DataStructure
+│   └── __init__.py
+├── GraphErrors
+│   ├── GraphErrors.py
+│   ├── __init__.py
+│   └── __pycache__
+│       ├── GraphErrors.cpython-38.pyc
+│       ├── GraphErrors.pypy37.pyc
+│       ├── __init__.cpython-38.pyc
+│       └── __init__.pypy37.pyc
+├── Graphy.py
+├── TotalTestLog
+├── __init__.py
+├── __main__.py
+├── __pycache__
+│   ├── Graphy.cpython-38.pyc
+│   └── Graphy.pypy37.pyc
+├── algorithm
+│   ├── DataConverter.py
+│   ├── Graph_gen.py
+│   ├── Painter.py
+│   ├── Random.py
+│   ├── Travel.py
+│   ├── __init__.py
+│   └── __pycache__
+│       ├── DataConverter.cpython-38.pyc
+│       ├── Graph_gen.cpython-38.pyc
+│       ├── Painter.cpython-38.pyc
+│       ├── Random.cpython-38.pyc
+│       ├── Travel.cpython-38.pyc
+│       ├── Travel.pypy37.pyc
+│       ├── __init__.cpython-38.pyc
+│       └── __init__.pypy37.pyc
+├── funcMemLog
+├── funcTimeLog
+├── project_tree
+├── run time.ipynb
+└── simple_test_log
+
+6 directories, 32 files
