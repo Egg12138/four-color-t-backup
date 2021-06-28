@@ -51,10 +51,10 @@ def DeepFirstFill(G:GraphByVertex, node:Vertex):
 def DeepFirstFillbyIndex(G:GraphByVertex, idx:int)->bool:
 	for clr in color_codes:
 		status = SUCCESSED
-		G.set_colorof(idx, clr)
-		print(G[idx])
 		if clr in [G[v].get_color for v in G.get_edgesof(idx)]:
 			status = FAILED
+		else:
+			G.set_colorof(idx, clr)
 		if status and (idx == G.MaxVNum - 1 or DeepFirstFillbyIndex(G, idx+1)):
 			return SUCCESSED
 

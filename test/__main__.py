@@ -49,6 +49,14 @@ parser.add_argument(
 	default=10,
 	help='The max number of degrees per vertexes holds, default=10'
 )
+parser.add_argument(
+	'-m', '--mod',
+	choices=['dfs','quick'],
+	type=str.lower,
+	dest='mod',
+	default='dfs',
+	help='The Paint Mode You Prefer:[dfs, dff, quick]'
+)
 args = parser.parse_args()
 
 color_list = ['r', 'lightcyan', 'cyan', 'c', 'teal']#Enumeration...
@@ -58,14 +66,20 @@ times = args.times
 willprint = args.willprint
 size = args.num_vertexes
 max_deg = args.degree
+paintmod = args.mod
 #filep = "/mnt/d/sourcecodes/git/four-colors/test/Demos/"
 
 @profile
-def main(maxVnum, maxDegNum, willprint=False, cnt=None):
+def main(maxVnum, maxDegNum, fillmode='quick', willprint=False, cnt=None):
 	if maxDegNum > maxVnum / 2:
 		maxDegNum = int(maxVnum) / 2
 	G= RandGenAdj(maxVnum, maxDegNum)
-	DeepFirstFillbyIndex(G, 0)
+	if fillmode == 'dfs':
+		print("Fac_Fill(DeepFirst)")
+		DeepFirstFillbyIndex(G, 0)
+	elif fillmode == 'quick':
+		print("Iterate_Fill(Quick)")
+		nearFilltry(G)#No more than 5 colors
 	if willprint:
 		print('*'*20)
 		print(G)
@@ -77,8 +91,9 @@ def main(maxVnum, maxDegNum, willprint=False, cnt=None):
 	plt.clf()
 
 if __name__ == '__main__':
-	mod = willprint
 	#cProfile.runctx('main(20, 4, mod)', None, locals())
 	#main(20, 4, sys.argv[1])
+	print(f"Painter Method = {paintmod}")
 	for i in range(times):
-		main(size, max_deg, mod, cnt=i)
+		cProfile.runctx('main(size, max_deg, fillmode=paintmod, willprint=willprint, cnt=i)', None, locals())
+		#main(size, max_deg, fillmode=paintmod, willprint=willprint, cnt=i)

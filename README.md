@@ -79,13 +79,13 @@ choicerest(used\_set, src\_set)
 * 让结点数生成更合理
 * 结构调整为：
 ```shell
-.
 ├── DataStructure
 │   └── __init__.py
-├── Demos
-|	├───Graphs
-.	...
-|
+├── DeepFirstFillDemos
+│   ├── 0.png
+│   ├─...
+│   └── 9.png
+├── DeepFirstFill_Log
 ├── GraphErrors
 │   ├── GraphErrors.py
 │   ├── __init__.py
@@ -95,6 +95,11 @@ choicerest(used\_set, src\_set)
 │       ├── __init__.cpython-38.pyc
 │       └── __init__.pypy37.pyc
 ├── Graphy.py
+├── QuickFillDemos
+│   ├── 0.png
+│   ├─...
+│   └── 9.png
+├── QuickFill_Log
 ├── TotalTestLog
 ├── Untitled.ipynb
 ├── __init__.py
@@ -118,14 +123,10 @@ choicerest(used\_set, src\_set)
 │       ├── Travel.pypy37.pyc
 │       ├── __init__.cpython-38.pyc
 │       └── __init__.pypy37.pyc
-├── funcMemLog
-├── funcTimeLog
 ├── project_tree
-├── run time.ipynb
-└── simple_test_log
+└── run time.ipynb
 
-7 directories, 53 files
-
+8 directories, 72 files
 ```
 
 ## 解释
