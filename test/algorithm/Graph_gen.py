@@ -23,12 +23,11 @@ def RandGenAdj(max_v, max_deg):
 
 		for i in range(degree_per_v):
 			w = ar.choicerest(tmp, maxvset)
-			print(w, end=';')
 			tmp.add(w)
 			G.addEdge(idx, w)
-		while len(G.get_edgesof(idx)) == 0: 
+		'''while len(G.get_edgesof(idx)) == 0: 
 			w = ar.choicerest({idx}, maxvset)
-			G.addEdge(idx, w)
+			G.addEdge(idx, w)'''
 	#print(f"{G.all_edges=}")
 	#G.sort_by_degree()
 	#print(f"{G.all_edges=}")

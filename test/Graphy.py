@@ -177,7 +177,7 @@ class GraphByVertex:
 		if v == w or v * w < 0:
 			return None
 		elif v not in self.G[w].get_linked and w not in self.G[v].get_linked:
-			if len(self.G[v].get_linked) > self.MaxVNum or len(self.G[w].get_linked) > self.MaxVNum:
+			if len(self.G[v].get_linked) >= self._max_deg or len(self.G[w].get_linked) >= self._max_deg:
 				return None
 			else:
 				self.G[v].addLinked(w)

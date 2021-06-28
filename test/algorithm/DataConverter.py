@@ -62,6 +62,7 @@ def clear1(graph:GraphByVertex)->tuple:
             graph[later_index].set_marked()
     #check:
     if not all(newcolors) in graph.all_colors:
+        print(f"{newcolors=}\n\n{graph.all_colors=}")
         raise GG.UnPairedError("Colors Unpaired!")
     return result, newcolors
 

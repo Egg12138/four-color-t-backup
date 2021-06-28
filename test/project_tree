@@ -1,6 +1,27 @@
 .
 ├── DataStructure
 │   └── __init__.py
+├── Demos
+│   ├── 0.png
+│   ├── 1.png
+│   ├── 10.png
+│   ├── 11.png
+│   ├── 12.png
+│   ├── 13.png
+│   ├── 14.png
+│   ├── 15.png
+│   ├── 16.png
+│   ├── 17.png
+│   ├── 18.png
+│   ├── 19.png
+│   ├── 2.png
+│   ├── 3.png
+│   ├── 4.png
+│   ├── 5.png
+│   ├── 6.png
+│   ├── 7.png
+│   ├── 8.png
+│   └── 9.png
 ├── GraphErrors
 │   ├── GraphErrors.py
 │   ├── __init__.py
@@ -11,6 +32,7 @@
 │       └── __init__.pypy37.pyc
 ├── Graphy.py
 ├── TotalTestLog
+├── Untitled.ipynb
 ├── __init__.py
 ├── __main__.py
 ├── __pycache__
@@ -38,4 +60,4 @@
 ├── run time.ipynb
 └── simple_test_log
 
-6 directories, 32 files
+7 directories, 53 files
