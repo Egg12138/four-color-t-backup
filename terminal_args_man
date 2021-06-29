@@ -1,0 +1,22 @@
+usage: __main__.py [-h] [-r TIMES] [-p] [-s NUM_VERTEXES] [-d DEGREE]
+                   [-m {dfs,quick}]
+                   f
+
+Program To Try Four-colors-Theorom
+
+positional arguments:
+  f                     The dir you wanna figures to be stored
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -r TIMES, --repeat TIMES
+                        $times you wanna repeat.Default=20
+  -p                    Print the Graph_structure on the standard out(You can
+                        use">" to redirect it
+  -s NUM_VERTEXES, --size NUM_VERTEXES
+                        The number of vertexes in the graph, deault=10
+  -d DEGREE, --degree DEGREE
+                        The max number of degrees per vertexes holds,
+                        default=10
+  -m {dfs,quick}, --mod {dfs,quick}
+                        The Paint Mode You Prefer:[dfs, dff, quick]
